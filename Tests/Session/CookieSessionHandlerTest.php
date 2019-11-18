@@ -23,10 +23,9 @@ class CookieSessionHandlerTest extends \PHPUnit\Framework\TestCase
     private $handler;
     private $kernel;
 
-    public function setUp()
+    public function php5and7setUp()
     {
         $this->handler = new CookieSessionHandler('s');
-
         $this->kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
     }
 
@@ -35,6 +34,8 @@ class CookieSessionHandlerTest extends \PHPUnit\Framework\TestCase
      */
     public function testOpenWithNoRequest()
     {
+        $this->php5and7setUp();
+
         $this->handler->open('foo', 'bar');
     }
 
@@ -43,11 +44,15 @@ class CookieSessionHandlerTest extends \PHPUnit\Framework\TestCase
      */
     public function testReadWithNoRequest()
     {
+        $this->php5and7setUp();
+
         $this->handler->read('foo');
     }
 
     public function testOpenWithoutSessionCookie()
     {
+        $this->php5and7setUp();
+
         $request = new Request();
         $response = new Response();
         $session = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\SessionInterface')->getMock();
@@ -70,6 +75,8 @@ class CookieSessionHandlerTest extends \PHPUnit\Framework\TestCase
 
     public function testWriteDestroy()
     {
+        $this->php5and7setUp();
+
         $this->handler->write('sessionId', 'mydata');
 
         $request = new Request();
@@ -103,6 +110,8 @@ class CookieSessionHandlerTest extends \PHPUnit\Framework\TestCase
      */
     public function testCookieNotOpened()
     {
+        $this->php5and7setUp();
+
         $session = $this->getMockBuilder('Symfony\Component\HttpFoundation\Session\SessionInterface')->getMock();
         $headers = $this->getMockBuilder('Symfony\Component\HttpFoundation\ResponseHeaderBag')->getMock();
         $headers

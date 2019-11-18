@@ -22,7 +22,7 @@ class ExternalRedirectListenerTest extends \PHPUnit\Framework\TestCase
 {
     private $kernel;
 
-    protected function setUp()
+    protected function php5and7setUp()
     {
         $this->kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
     }
@@ -32,6 +32,8 @@ class ExternalRedirectListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testRedirectMatcher($source, $target, $expected)
     {
+        $this->php5and7setUp();
+
         $listener = new ExternalRedirectListener(true);
         $result = $listener->isExternalRedirect($source, $target);
         $this->assertSame($expected, $result);
@@ -64,6 +66,8 @@ class ExternalRedirectListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testRedirectAbort()
     {
+        $this->php5and7setUp();
+
         $listener = new ExternalRedirectListener(true);
         $this->filterResponse($listener, 'http://foo.com/', 'http://bar.com/');
     }
@@ -73,6 +77,8 @@ class ExternalRedirectListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testRedirectOverrides()
     {
+        $this->php5and7setUp();
+
         $listener = new ExternalRedirectListener(false, '/override');
         $response = $this->filterResponse($listener, 'http://foo.com/', 'http://bar.com/');
 
@@ -85,6 +91,8 @@ class ExternalRedirectListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testRedirectSkipsAllowedTargets()
     {
+        $this->php5and7setUp();
+
         $listener = new ExternalRedirectListener(true, null, null, new WhitelistBasedTargetValidator(array('bar.com')));
 
         $response = $this->filterResponse($listener, 'http://foo.com/', 'http://bar.com');
@@ -98,6 +106,8 @@ class ExternalRedirectListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testRedirectDoesNotSkipNonWhitelistedDomains($whitelist, $domain)
     {
+        $this->php5and7setUp();
+
         $listener = new ExternalRedirectListener(true, null, null, $whitelist);
 
         $this->filterResponse($listener, 'http://foo.com/', 'http://'.$domain.'/');
@@ -119,6 +129,8 @@ class ExternalRedirectListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testRedirectSkipsWhitelistedDomains($whitelist, $domain)
     {
+        $this->php5and7setUp();
+
         $listener = new ExternalRedirectListener(true, null, null, $whitelist);
 
         $response = $this->filterResponse($listener, 'http://foo.com/', 'http://'.$domain.'/');
@@ -139,6 +151,8 @@ class ExternalRedirectListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testListenerSkipsSubReqs()
     {
+        $this->php5and7setUp();
+
         $listener = new ExternalRedirectListener(true);
         $request = Request::create('http://test.org/');
 

@@ -22,7 +22,7 @@ class ClickjackingListenerTest extends \PHPUnit\Framework\TestCase
     private $kernel;
     private $listener;
 
-    protected function setUp()
+    protected function php5and7setUp()
     {
         $this->kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
         $this->listener = new ClickjackingListener(array(
@@ -40,6 +40,8 @@ class ClickjackingListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testClickjackingMatches($path, $result)
     {
+        $this->php5and7setUp();
+
         $response = $this->callListener($this->listener, $path, true);
         $this->assertEquals($result, $response->headers->get('X-Frame-Options'));
     }
@@ -60,12 +62,16 @@ class ClickjackingListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testClickjackingSkipsSubReqs()
     {
+        $this->php5and7setUp();
+
         $response = $this->callListener($this->listener, '/', false);
         $this->assertEquals(null, $response->headers->get('X-Frame-Options'));
     }
 
     protected function callListener($listener, $path, $masterReq, $contentType = 'text/html')
     {
+        $this->php5and7setUp();
+
         $request = Request::create($path);
         $response = new Response();
         $response->headers->add(array('content-type' => $contentType));
@@ -81,6 +87,8 @@ class ClickjackingListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testClickjackingWithContentTypes($contentType, $result)
     {
+        $this->php5and7setUp();
+
         $this->listener = new ClickjackingListener(array(
             '^/frames/' => array('header' => 'ALLOW'),
             '/frames/' => array('header' => 'SAMEORIGIN'),

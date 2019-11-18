@@ -19,7 +19,7 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
     private $nonceGenerator;
     private $shaComputer;
 
-    protected function setUp()
+    protected function php5and7setUp()
     {
         $this->kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
         $this->nonceGenerator = $this->getMockBuilder('Nelmio\SecurityBundle\ContentSecurityPolicy\NonceGenerator')
@@ -43,6 +43,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testDeprecationNotice()
     {
+        $this->php5and7setUp();
+
         $listener = $this->buildSimpleListener(array('default-src' => "default.example.org 'self'"));
         $listener->getNonce();
     }
@@ -50,14 +52,18 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
     /**
      * @expectedException Invalid usage provided
      */
-    public function tesInvalidArgumentException()
+    public function testInvalidArgumentException()
     {
+        $this->php5and7setUp();
+
         $listener = $this->buildSimpleListener(array('default-src' => "default.example.org 'self'"));
         $listener->getNonce('prout');
     }
 
     public function testDefault()
     {
+        $this->php5and7setUp();
+
         $listener = $this->buildSimpleListener(array('default-src' => "default.example.org 'self'"));
         $response = $this->callListener($listener, '/', true);
 
@@ -69,6 +75,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testDefaultWithSignatures()
     {
+        $this->php5and7setUp();
+
         $listener = $this->buildSimpleListener(array('default-src' => "default.example.org 'self'"));
         $response = $this->callListener($listener, '/', true, 'text/html', array('signatures' => array('script-src' => array('sha-1'))));
 
@@ -80,6 +88,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testEvenWithUnsafeInlineItAppliesSignature()
     {
+        $this->php5and7setUp();
+
         $listener = $this->buildSimpleListener(array('default-src' => "default.example.org 'self'", 'script-src' => "'self' 'unsafe-inline'"));
         $response = $this->callListener($listener, '/', true, 'text/html', array('signatures' => array('script-src' => array('sha-1'))));
 
@@ -91,6 +101,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testDefaultWithSignaturesAndNonce()
     {
+        $this->php5and7setUp();
+
         $this->nonceGenerator->expects($this->any())
             ->method('generate')
             ->will($this->returnValue('12345'));
@@ -106,6 +118,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testDefaultWithAddScript()
     {
+        $this->php5and7setUp();
+
         $listener = $this->buildSimpleListener(array('default-src' => "default.example.org 'self'"));
         $response = $this->callListener($listener, '/', true, 'text/html', array('scripts' => array('<script></script>'), 'styles' => array('<style></style>')), 3);
 
@@ -117,6 +131,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testWithContentTypeRestriction()
     {
+        $this->php5and7setUp();
+
         $listener = $this->buildSimpleListener(array('default-src' => "default.example.org 'self'"), false, true, array('text/html'));
         $response = $this->callListener($listener, '/', true, 'application/json');
 
@@ -125,6 +141,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testScript()
     {
+        $this->php5and7setUp();
+
         $script = "script.example.org 'self' 'unsafe-eval' 'strict-dynamic' 'unsafe-inline'";
 
         $listener = $this->buildSimpleListener(array('script-src' => $script));
@@ -137,6 +155,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testObject()
     {
+        $this->php5and7setUp();
+
         $object = "object.example.org 'self'";
 
         $listener = $this->buildSimpleListener(array('object-src' => $object));
@@ -146,6 +166,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testStyle()
     {
+        $this->php5and7setUp();
+
         $style = "style.example.org 'self'";
 
         $listener = $this->buildSimpleListener(array('style-src' => $style));
@@ -155,6 +177,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testImg()
     {
+        $this->php5and7setUp();
+
         $img = "img.example.org 'self'";
 
         $listener = $this->buildSimpleListener(array('img-src' => $img));
@@ -164,6 +188,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testMedia()
     {
+        $this->php5and7setUp();
+
         $media = "media.example.org 'self'";
 
         $listener = $this->buildSimpleListener(array('media-src' => $media));
@@ -173,6 +199,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testFrame()
     {
+        $this->php5and7setUp();
+
         $frame = "frame.example.org 'self'";
 
         $listener = $this->buildSimpleListener(array('frame-src' => $frame));
@@ -182,6 +210,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testFont()
     {
+        $this->php5and7setUp();
+
         $font = "font.example.org 'self'";
 
         $listener = $this->buildSimpleListener(array('font-src' => $font));
@@ -191,6 +221,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testConnect()
     {
+        $this->php5and7setUp();
+
         $connect = "connect.example.org 'self'";
 
         $listener = $this->buildSimpleListener(array('connect-src' => $connect));
@@ -203,6 +235,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testReportUri()
     {
+        $this->php5and7setUp();
+
         $reportUri = 'http://example.org/CSPReport';
 
         $listener = $this->buildSimpleListener(array('report-uri' => $reportUri));
@@ -215,6 +249,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testEmpty()
     {
+        $this->php5and7setUp();
+
         $listener = $this->buildSimpleListener(array());
         $response = $this->callListener($listener, '/', true);
         $this->assertNull($response->headers->get('Content-Security-Policy'));
@@ -222,6 +258,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testAll()
     {
+        $this->php5and7setUp();
+
         $reportUri = 'http://example.org/CSPReport';
 
         $listener = $this->buildSimpleListener(array(
@@ -268,6 +306,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testDelimiter()
     {
+        $this->php5and7setUp();
+
         $spec = 'example.org';
         $listener = $this->buildSimpleListener(array(
             'default-src' => "default.example.org 'self'",
@@ -297,6 +337,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testAvoidDuplicates()
     {
+        $this->php5and7setUp();
+
         $spec = 'example.org';
         $listener = $this->buildSimpleListener(array(
             'default-src' => $spec,
@@ -322,6 +364,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testVendorPrefixes()
     {
+        $this->php5and7setUp();
+
         $spec = 'example.org';
         $listener = $this->buildSimpleListener(array(
             'default-src' => $spec,
@@ -345,6 +389,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testReportOnly()
     {
+        $this->php5and7setUp();
+
         $spec = 'example.org';
         $listener = $this->buildSimpleListener(array(
             'default-src' => $spec,
@@ -365,6 +411,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testNoCompatHeaders()
     {
+        $this->php5and7setUp();
+
         $spec = 'example.org';
         $listener = $this->buildSimpleListener(array(
             'default-src' => $spec,
@@ -385,6 +433,8 @@ class ContentSecurityPolicyListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testDirectiveSetUnset()
     {
+        $this->php5and7setUp();
+
         $directiveSet = new DirectiveSet(new PolicyManager());
         $directiveSet->setDirectives(array('default-src' => 'foo'));
         $this->assertEquals('default-src foo', $directiveSet->buildHeaderValue(new Request()));

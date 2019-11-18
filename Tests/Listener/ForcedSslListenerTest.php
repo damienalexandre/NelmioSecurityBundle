@@ -22,7 +22,7 @@ class ForcedSslListenerTest extends \PHPUnit\Framework\TestCase
 {
     private $kernel;
 
-    protected function setUp()
+    protected function php5and7setUp()
     {
         $this->kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
     }
@@ -32,6 +32,8 @@ class ForcedSslListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testHstsHeaders($hstsMaxAge, $hstsSubdomains, $hstsPreload, $result)
     {
+        $this->php5and7setUp();
+
         $listener = new ForcedSslListener($hstsMaxAge, $hstsSubdomains, $hstsPreload);
 
         $response = $this->callListenerResp($listener, 'https://localhost/', true);
@@ -43,6 +45,8 @@ class ForcedSslListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testHstsHeadersNotSetForNonSecureRequest($hstsMaxAge, $hstsSubdomains, $hstsPreload)
     {
+        $this->php5and7setUp();
+
         $listener = new ForcedSslListener($hstsMaxAge, $hstsSubdomains, $hstsPreload);
 
         $response = $this->callListenerResp($listener, 'http://localhost/', true);
@@ -63,6 +67,8 @@ class ForcedSslListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testForcedSslSkipsSubReqs()
     {
+        $this->php5and7setUp();
+
         $listener = new ForcedSslListener(60, true);
 
         $response = $this->callListenerResp($listener, 'https://localhost/', false);
@@ -71,6 +77,8 @@ class ForcedSslListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testForcedSslSkipsWhitelisted()
     {
+        $this->php5and7setUp();
+
         $listener = new ForcedSslListener(60, true, false, array('^/foo/', 'bar'));
 
         $response = $this->callListenerReq($listener, 'http://localhost/foo/lala', true);
@@ -85,6 +93,8 @@ class ForcedSslListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testForcedSslOnlyUsesHosts()
     {
+        $this->php5and7setUp();
+
         $listener = new ForcedSslListener(60, true, false, array(), array('^foo\.com$', '\.example\.org$'));
 
         $response = $this->callListenerReq($listener, 'http://afoo.com/foo/lala', true);
@@ -99,6 +109,8 @@ class ForcedSslListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testForcedSslRedirectStatusCodes()
     {
+        $this->php5and7setUp();
+
         $listener = new ForcedSslListener(null, false);
 
         $response = $this->callListenerReq($listener, '/foo/lala', true);
@@ -112,6 +124,8 @@ class ForcedSslListenerTest extends \PHPUnit\Framework\TestCase
 
     protected function callListenerReq($listener, $uri, $masterReq)
     {
+        $this->php5and7setUp();
+
         $request = Request::create($uri);
 
         $event = new GetResponseEvent($this->kernel, $request, $masterReq ? HttpKernelInterface::MASTER_REQUEST : HttpKernelInterface::SUB_REQUEST);
@@ -122,6 +136,8 @@ class ForcedSslListenerTest extends \PHPUnit\Framework\TestCase
 
     protected function callListenerResp(ForcedSslListener $listener, $uri, $masterReq)
     {
+        $this->php5and7setUp();
+
         $request = Request::create($uri);
         $response = new Response();
 

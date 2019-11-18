@@ -12,13 +12,15 @@ class ContentTypeListenerTest extends \PHPUnit\Framework\TestCase
 {
     private $kernel;
 
-    protected function setUp()
+    protected function php5and7setUp()
     {
         $this->kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
     }
 
     public function testNoSniff()
     {
+        $this->php5and7setUp();
+
         $listener = new ContentTypeListener(true);
         $response = $this->callListener($listener, '/', true);
         $this->assertEquals(
@@ -30,6 +32,8 @@ class ContentTypeListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testEmpty()
     {
+        $this->php5and7setUp();
+
         $listener = new ContentTypeListener(false);
         $response = $this->callListener($listener, '/', true);
         $this->assertNull(

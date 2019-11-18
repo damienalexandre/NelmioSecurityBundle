@@ -25,10 +25,8 @@ class EncryptedCookieListenerTest extends \PHPUnit\Framework\TestCase
     private $encrypter;
     private $kernel;
 
-    protected function setUp()
+    protected function php5and7setUp()
     {
-        parent::setUp();
-
         if (!function_exists('mcrypt_module_open')) {
             $this->markTestSkipped('MCrypt is not installed');
         }
@@ -48,6 +46,8 @@ class EncryptedCookieListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testCookieReading($encryptedCookieNames, $inputCookies, $expectedCookies)
     {
+        $this->php5and7setUp();
+
         $listener = new EncryptedCookieListener($this->encrypter, $encryptedCookieNames);
         $request = Request::create('/', 'GET', array(), $inputCookies);
 
@@ -74,6 +74,8 @@ class EncryptedCookieListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testCookieWritingWithoutEncryption($encryptedCookieNames, $inputCookies, $expectedCookies)
     {
+        $this->php5and7setUp();
+
         $listener = new EncryptedCookieListener($this->encrypter, $encryptedCookieNames);
         $request = Request::create('/');
 
@@ -107,6 +109,8 @@ class EncryptedCookieListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testCookieWritingWithEncryption()
     {
+        $this->php5and7setUp();
+
         $inputCookies = array(
             'foo' => 'bar',
             'symfony' => 'rocks',

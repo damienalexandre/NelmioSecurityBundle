@@ -15,10 +15,8 @@ use Nelmio\SecurityBundle\Encrypter;
 
 class EncrypterTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
+    public function php5and7setUp()
     {
-        parent::setUp();
-
         if (!function_exists('mcrypt_module_open')) {
             $this->markTestSkipped('MCrypt is not installed');
         }
@@ -32,6 +30,8 @@ class EncrypterTest extends \PHPUnit\Framework\TestCase
      */
     public function testConstructorShouldVerifyAlgoritm()
     {
+        $this->php5and7setUp();
+
         new Encrypter('secret', 'invalid_algoritm');
     }
 
@@ -41,6 +41,8 @@ class EncrypterTest extends \PHPUnit\Framework\TestCase
      */
     public function testEncryption()
     {
+        $this->php5and7setUp();
+
         $encrypter = new Encrypter('secret', 'rijndael-128');
 
         $value = 'bar';

@@ -12,7 +12,7 @@ class XssProtectionListenerTest extends \PHPUnit\Framework\TestCase
 {
     private $kernel;
 
-    protected function setUp()
+    protected function php5and7setUp()
     {
         $this->kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
     }
@@ -22,6 +22,8 @@ class XssProtectionListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testVariousConfig($expectedValue, $listener)
     {
+        $this->php5and7setUp();
+
         $response = $this->callListener($listener, '/', true);
 
         $this->assertEquals($expectedValue, $response->headers->get('X-Xss-Protection'));

@@ -26,7 +26,7 @@ class SignedCookieListenerTest extends \PHPUnit\Framework\TestCase
     private $signer;
     private $kernel;
 
-    protected function setUp()
+    protected function php5and7setUp()
     {
         $this->signer = new Signer('secret', 'sha1');
         $this->kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
@@ -37,6 +37,8 @@ class SignedCookieListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testCookieReading($signedCookieNames, $inputCookies, $expectedCookies)
     {
+        $this->php5and7setUp();
+
         $listener = new SignedCookieListener($this->signer, $signedCookieNames);
         $request = Request::create('/', 'GET', array(), $inputCookies);
 
@@ -62,6 +64,8 @@ class SignedCookieListenerTest extends \PHPUnit\Framework\TestCase
      */
     public function testCookieWriting($signedCookieNames, $inputCookies, $expectedCookies)
     {
+        $this->php5and7setUp();
+
         $listener = new SignedCookieListener($this->signer, $signedCookieNames);
         $request = Request::create('/');
 
@@ -93,6 +97,8 @@ class SignedCookieListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testCookieReadingSkipsSubReqs()
     {
+        $this->php5and7setUp();
+
         $listener = new SignedCookieListener($this->signer, array('*'));
         $request = Request::create('/', 'GET', array(), array('foo' => 'bar'));
 
@@ -104,6 +110,8 @@ class SignedCookieListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testCookieWritingSkipsSubReqs()
     {
+        $this->php5and7setUp();
+
         $listener = new SignedCookieListener($this->signer, array('*'));
         $request = Request::create('/');
 
