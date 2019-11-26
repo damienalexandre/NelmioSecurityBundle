@@ -1,3 +1,7 @@
+### To release
+
+  * Symfony 5 compatibility added
+  
 ### 2.7.0 (2019-04-03)
 
   * Use base64 for encoding nonces
